@@ -62,5 +62,90 @@ public:
         return temp;
     }
 };
+by slow fast algo tortoise algo
+ ListNode* middleNode(ListNode* head) {
+        ListNode*slow=head;
+        ListNode*fast=head;
+        while(fast && fast->next != NULL){
+         slow= slow->next;
+         fast = fast-> next->next;
+        }
+        return slow;
+    }
+};
 
 3
+234. Palindrome Linked List
+https://leetcode.com/problems/palindrome-linked-list/description/
+class Solution {
+public:
+  ListNode* reverseusingrecursion(ListNode* prev, ListNode*curr){
+        if(curr == NULL){
+            return prev;
+        }
+        // ek case hmne solve kr liya h 
+       ListNode*NextNode = curr -> next;
+       curr -> next = prev;
+       prev = curr;
+       curr = NextNode;
+       // baaki recusion smbhlega 
+       ListNode*recusionkaans = reverseusingrecursion( prev,curr);
+       return recusionkaans;
+
+      }
+ListNode* middleNode(ListNode* head) {
+        ListNode*slow=head;
+        ListNode*fast=head;
+        while(fast->next != NULL){
+            fast = fast-> next;
+            if(fast->next != NULL){
+                fast= fast->next;
+         slow= slow->next;
+            }
+        }
+        return slow;
+}
+    bool comparelist(ListNode*head,ListNode*head2){
+        while(head!=NULL&& head2 != NULL){
+            if(head->val!=head2->val){
+                return false;
+            }
+            else{
+                head=head->next;
+                head2=head2->next;
+            }
+        }
+        return true;
+    }
+    bool isPalindrome(ListNode* head) {
+        // break into 2 parts
+        ListNode*midNode=middleNode(head);
+        ListNode*head2 = midNode->next;
+        midNode -> next = NULL;
+        // reverse second linklist 
+        ListNode*prev = NULL;
+        ListNode*curr = head2;
+        head2=reverseusingrecursion(prev,curr);
+    // compare both linked list
+    bool ans = comparelist(head,head2);
+    return ans;
+    
+    }
+};
+4
+141. Linked List Cycle
+https://leetcode.com/problems/linked-list-cycle/description/
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+         ListNode *slow = head, *fast = head;
+    while (fast && fast->next!=NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            return true;
+    }
+    return false;
+    }
+};
+
