@@ -149,3 +149,74 @@ public:
     }
 };
 
+5
+142. Linked List Cycle II
+https://leetcode.com/problems/linked-list-cycle-ii/description/
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+    while (fast!=NULL && fast->next!=NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+        // point where slow and fast meet break
+        if (slow == fast)
+            break;
+    }
+    // no cycle case 
+   if (fast==NULL || fast->next==NULL)
+    return NULL;
+    // fast is kept where it meet the slow and slow comes at head 
+    slow = head;
+    while(fast!=slow){
+       slow=slow -> next;
+        fast= fast-> next;
+    }
+    return slow;
+    }
+};
+6 
+ADD 1 TO A LINKED LIST 
+Node * reverse(Node*&head){
+      Node*prev = NULL;
+      Node*curr = head;
+      while(curr!=NULL){
+       Node*nextnode = curr->next;
+       curr -> next = prev;
+       prev = curr;
+       curr= nextnode;
+      }
+    return prev;
+}
+void addone(Node*&head){
+    // reverse
+    head = reverse(head);
+    cout << head->data<< endl;
+    // add 1 
+    int carry =1;
+    Node*temp=head;
+    while(temp->next!=NULL){
+        int totalsum = temp -> data + carry;
+        int digit = totalsum % 10;
+        carry = totalsum/10;
+        temp -> data = digit;
+        temp = temp -> next;
+        if(carry==0){
+            break;
+        }
+    }
+    // process last node
+    if(carry!=0){
+        int totalsum = temp -> data + carry;
+        int digit = totalsum % 10;
+        carry = totalsum/10;
+        temp -> data = digit;
+        if(carry!=0){
+            Node*newNode = new Node(carry);
+            temp -> next = newNode;
+        }
+    }
+    // reverse
+    head = reverse(head);
+}
