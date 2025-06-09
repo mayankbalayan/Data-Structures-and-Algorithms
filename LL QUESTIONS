@@ -220,3 +220,120 @@ void addone(Node*&head){
     // reverse
     head = reverse(head);
 }
+7
+25. Reverse Nodes in k-Group
+https://leetcode.com/problems/reverse-nodes-in-k-group/description/
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        // base case
+        // Check if there are at least k nodes to reverse
+         ListNode* temp = head;
+        for (int i = 0; i < k; i++) {
+            if (temp==NULL) return head; // Not enough nodes, return original head
+            temp = temp->next;
+        }
+        // case 1 reverse first k nodes
+        ListNode*prev=NULL;
+        ListNode*curr=head;
+        int pos = 0;
+        ListNode*nextNode =NULL; 
+        while(pos<k){
+        nextNode =curr->next;    
+        curr -> next = prev;
+        prev=curr;
+        curr=nextNode;
+        pos++;
+        }
+        // recursively reverse next grp and connect
+       if(nextNode!=NULL){
+        head->next=reverseKGroup(nextNode,k);
+       }
+       return prev; //new head after reversing k nodes
+    }
+};
+8
+83. Remove Duplicates from Sorted List
+https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head==NULL||head->next==NULL){
+            return head;
+        }
+        ListNode*temp=head;
+        while(temp!=NULL && temp->next!=NULL){
+            if( temp->val==temp->next->val){
+                //remove
+        ListNode* nextnode=temp->next;
+        temp->next=nextnode->next;
+        nextnode->next=NULL;
+        delete nextnode;
+            }
+            else{
+                temp=temp->next;
+            }
+        }
+        return head;
+    }
+};
+9
+21. Merge Two Sorted Lists
+https://leetcode.com/problems/merge-two-sorted-lists/description/
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        if(list1==NULL)return list2;
+        if(list2==NULL)return list1;
+        ListNode* ans = new ListNode(-1);
+        ListNode*merge=ans;
+        while(list1!=NULL&&list2!=NULL){
+            if(list1->val<=list2->val){
+                merge->next=list1;
+                merge=list1;
+                list1=list1->next;
+            }
+            else{
+                merge->next=list2;
+                merge = list2;
+                list2=list2->next;
+            }
+        }
+        if(list1!=NULL){
+            merge->next=list1;
+        }
+         if(list2!=NULL){
+            merge->next=list2;
+        }
+        return ans->next;
+    }
+};
+10
+Delete N nodes after M nodes of a linked list
+https://www.geeksforgeeks.org/problems/delete-n-nodes-after-m-nodes-of-a-linked-list/1
+class Solution {
+  public:
+    Node* linkdelete(Node* head, int n, int m) {
+        // code here
+        if(head==NULL){
+            return NULL;
+        }
+        Node*temp=head;
+       while(temp!=NULL){
+            for(int i=1;i<m&&temp!=NULL;i++){
+                temp=temp->next;
+            }
+        
+            if(temp==NULL)return head;
+            Node*temp2=temp->next;
+            for(int j=0;j<n&&temp2!=NULL;j++){
+                Node*toDel=temp2;
+                temp2=temp2->next;
+                delete(toDel);
+            }
+            temp->next=temp2;
+             temp = temp2;
+       }
+            return head;
+        }
+};
