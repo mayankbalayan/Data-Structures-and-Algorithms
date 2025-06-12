@@ -502,4 +502,39 @@ public:
        return newHead;
     }
 };
-
+15
+2181. Merge Nodes in Between Zeros
+https://leetcode.com/problems/merge-nodes-in-between-zeros/description/
+class Solution {
+public:
+    ListNode* mergeNodes(ListNode* head) {
+        if(head==NULL) return 0;
+        ListNode*slow=head;
+        ListNode*fast=head->next;
+        ListNode*newlastnode = NULL;
+        int sum = 0;
+        while(fast!=NULL){
+          if(fast->val!=0){
+             sum += fast->val;
+          }
+          else{
+            // fast->val = 0 so, slow = sum;
+            slow->val=sum;
+            newlastnode=slow;
+            slow = slow->next;
+            sum =0;
+          }
+          fast = fast ->next;
+        }
+        ListNode*temp=newlastnode->next;
+        // just formed new list 
+        newlastnode->next = NULL;
+         // Deleting old list
+         while (temp!=NULL){
+            ListNode*nxt = temp->next;
+            delete temp;
+            temp = nxt;
+         }
+         return head;
+    }
+};
