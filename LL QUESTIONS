@@ -538,3 +538,118 @@ public:
          return head;
     }
 };
+16
+328 odd even linked list
+https://leetcode.com/problems/odd-even-linked-list/description/
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(head==NULL|| head->next == NULL) return head;
+        ListNode*h1 = head; // odd node index
+        ListNode*h2=head->next; // even node index
+        ListNode*evenhead = h2;
+        while(h2!=NULL&&h2->next!= NULL){
+            h1->next=h2->next;
+            h2->next=h2->next->next;
+            h1=h1->next;
+            h2=h2->next;
+        }
+        // THE TWO independent prepared list has been regrouped
+        // odd index vali list -> even index list
+        h1->next=evenhead;
+        return head;
+    }
+};
+17
+2816. Double a Number Represented as a Linked List
+https://leetcode.com/problems/double-a-number-represented-as-a-linked-list/description/
+class Solution {
+public:
+    void solve(ListNode*head,int&carry){
+     if(head==NULL)return;
+     solve(head->next,carry);
+     // 1 case solve
+     int prod = head->val * 2 + carry;
+     head->val = prod%10;
+     carry = prod/10;
+    }
+    ListNode* doubleIt(ListNode* head) {
+        int carry=0;
+        solve(head,carry);
+        if(carry!=0){
+            ListNode*carrynode = new ListNode(carry);
+            carrynode -> next = head;
+            head = carrynode;
+        }
+        return head;
+    }
+};
+18
+1721. Swapping Nodes in a Linked List
+https://leetcode.com/problems/swapping-nodes-in-a-linked-list/description/
+class Solution {
+public:
+int getlen(ListNode*head){
+    int len=0;
+    while(head!=NULL){
+        len++;
+        head=head->next;
+    }
+    return len;
+ }
+    ListNode* swapNodes(ListNode* head, int k) {
+        int len = getlen(head);
+        ListNode*it1=head;
+        ListNode*it2=head;
+        for(int i=0; i<k-1; i++){
+           it1 = it1->next;
+        }
+        for(int i=0; i<len-k; i++){
+            it2=it2->next;
+        }
+        swap(it1->val,it2->val);
+        return head;
+    }
+};
+19
+1171. Remove Zero Sum Consecutive Nodes from Linked List
+https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/
+class Solution {
+public:
+void sanatizeMap(ListNode*head,unordered_map<int,ListNode*>&mp,int csum){
+    int temp = csum;
+    while(true){
+        temp += head->val;
+        if(temp == csum){
+            break;
+        }
+        mp.erase(temp);
+        head= head->next;
+    }
+}
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        if(head==NULL || (head->next==NULL&& head->val==0)) return 0;
+        unordered_map<int,ListNode*>mp;
+        auto it = head;
+        int csum = 0;
+        while(it!=NULL){
+            csum += it->val;
+            if(csum==0){
+                head = it->next;
+                mp.clear();
+            }
+            else if(mp.find(csum)!=mp.end()){
+                sanatizeMap(mp[csum]->next,mp,csum);
+                mp[csum]->next = it-> next;
+            }
+        
+        else{
+            mp[csum] = it;
+        }
+                    it = it -> next;
+
+    }
+        return head;
+    }
+};
+20
