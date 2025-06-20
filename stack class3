@@ -1,3 +1,4 @@
+// class 3 of stacks questions
 #include<iostream>
 #include<stack>
 #include<vector>
