@@ -1,0 +1,594 @@
+1 
+84. Largest Rectangle in Histogram
+class Solution {
+public: 
+// prev smallest element
+vector<int> prevsmallerelement(vector<int>arr, int size){
+        vector<int>ans(arr.size());
+    stack<int>st;
+    st.push(-1);
+    for(int i =0; i<arr.size(); i++){
+     int curr = arr[i];
+     // answer find kro curr element k liye 
+     while(st.top()!=-1 && arr[st.top()]>=curr){
+        st.pop(); 
+     }
+     ans[i] = st.top();
+     st.push(i);
+    }
+    return ans;
+}
+
+// next smaller element
+vector<int> nextsmallerelement(vector<int>arr, int size){
+    vector<int>ans(arr.size());
+    stack<int>st;
+    st.push(-1);
+    for(int i =arr.size()-1; i>=0; i--){
+     int curr = arr[i];
+     // answer find kro curr element k liye 
+     while(st.top()!=-1 && arr[st.top()]>=curr){
+        st.pop(); 
+     }
+     ans[i] = st.top();
+     st.push(i);
+    }
+    return ans;
+}
+
+    int largestRectangleArea(vector<int>& heights) {
+        int size = heights.size();
+        vector<int>next = nextsmallerelement(heights,size);
+        for(int i =0; i < heights.size(); i++){
+            if(next[i]==-1){
+                next[i] = heights.size();
+            }
+        }
+        vector<int>prev = prevsmallerelement(heights,size);
+        vector<int> area(next.size());
+        for(int i =0 ; i<next.size(); i++){
+            int width  =  next[i]- prev[i]-1;
+            int length = heights[i];
+            int currarea = width * length;
+            area[i]=currarea;
+        }
+        int maxi = INT_MIN;
+        for(int i =0; i<area.size(); i++){
+            maxi = max(maxi, area[i]);
+        }
+        return maxi;
+    }
+};
+
+2 
+1047. Remove All Adjacent Duplicates In String
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        // using stack 
+        stack<char>st;
+        for(auto ch : s){
+            if(!st.empty() && st.top() == ch){
+             // pair up 
+             st.pop();
+            }
+            else{
+                st.push(ch);
+            }
+        }
+          string ans;
+          while(!st.empty()){
+            ans += st.top();
+            st.pop();
+            // this will give a reverse string 
+          }
+          // now we will reverse the string to match it with the ans 
+          reverse(ans.begin(),ans.end());
+          return ans;
+
+        // solved using string 
+        // string ans = "";
+        // int index = 0;
+        // while(index < s.length()){
+        //     // same 
+        //     // ans ka right most character and s ka current character 
+        // if(ans.length()>0 && ans[ans.length()-1]== s[index]){
+        //     // pop from ans 
+        //     ans.pop_back();
+        // }
+        // else{
+        //     // push 
+        //     ans.push_back(s[index]);
+        // }
+        // index++;
+        // }
+        // return ans;
+    }
+};
+
+3
+1019. Next Greater Node In Linked List
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> nextLargerNodes(ListNode* head) {
+        vector<int>values;
+        while(head!=NULL){
+            values.push_back(head->val);
+            head = head->next;
+        }
+        int n = values.size();
+        vector<int>answer(n,0); // initilizing all its value to 0 
+        stack<int>st;    
+        for(int i = n-1; i>=0; i--){
+            // when stack is not empty and the value top element of stack is less then value[i]
+            while(!st.empty()&& st.top()<= values[i]){
+            st.pop();
+            }
+            // when stack is not empty and the value of the top element is greater then the value[i]
+            if(!st.empty() && st.top()>values[i]){
+            answer[i]=st.top();
+            }
+            // when stack is empty push the values[i]
+            st.push(values[i]);
+        }   
+        // return the answer array 
+        return answer;
+    }
+};
+
+4 
+206. Reverse Linked List
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+// reverse using recurion 
+      ListNode* reverseusingrecursion(ListNode* prev, ListNode*curr){
+        if(curr == NULL){
+            return prev;
+        }
+        // ek case hmne solve kr liya h 
+       ListNode*NextNode = curr -> next;
+       curr -> next = prev;
+       prev = curr;
+       curr = NextNode;
+       // baaki recusion smbhlega 
+       ListNode*recusionkaans = reverseusingrecursion( prev,curr);
+       return recusionkaans;
+
+      }
+    ListNode* reverseList(ListNode* head) {
+    ListNode*prev = NULL;
+    ListNode* curr = head;
+    return reverseusingrecursion( prev,curr);
+    // iterative way 
+    // while(curr!=NULL){
+    //     ListNode*NextNode = curr -> next;
+    //     curr -> next = prev;
+    //     prev = curr;
+    //     curr = NextNode;
+    // }
+    //  return prev;
+      
+    }
+};
+
+5 
+The Celebrity Problem
+https://www.geeksforgeeks.org/problems/the-celebrity-problem/1
+class Solution {
+  public:
+    int celebrity(vector<vector<int> >& mat) {
+        // code here
+        stack<int>st;
+        int n = mat.size();
+        // step 1 push all person in to the stack 
+        for(int i =0; i<n; i++){
+            st.push(i);
+        }
+        // step 2 find the element that can be a celebraty by comparing both 
+        //the top element and descarding the other which is cant be a celebrity
+        while(st.size()>1){
+            int a = st.top();
+            st.pop();
+            int b = st.top();
+            st.pop();
+            // if a knows b ?
+            if(mat[a][b]==1){
+                // a knows b => a is not a celeb
+                st.push(b);
+            }
+            else{
+                // a does NOT know b => b is not a celeb
+                st.push(a);
+            }
+        }
+        // step 3 check that single person actually is a celebrity
+        int mightbecel= st.top(); st.pop(); 
+        // cel should not know anyone
+        // row should be 0
+        for(int i=0; i<n ; i++){
+            if(i!= mightbecel && mat[mightbecel][i] == 1){
+                return -1;
+            }
+        }
+        // everyone should know the cel
+        for(int i= 0; i<n; i++){
+            if( i != mightbecel && mat[i][mightbecel]==0 ){
+                return -1;
+            }
+        }
+        // might be cel is celebrity
+        return mightbecel;
+    }
+};
+
+6
+Count the Reversals
+https://www.geeksforgeeks.org/problems/count-the-reversals0401/1
+class Solution {
+  public:
+    int countMinReversals(string s) {
+        // code here
+        // if size of the string is odd then return -1
+        if(s.size() & 1) return -1;
+        int ans = 0;
+        stack<char>st;
+        for(char ch : s){
+            if(ch == '{'){
+                st.push(ch);
+            }
+            else{
+                if(!st.empty() && st.top()=='{'){
+                    st.pop();
+                }
+                else{
+                    st.push(ch);
+                }
+            }
+        }
+        // if stack is still non empty, lets count reversal 
+         while(!st.empty()){
+             char a = st.top(); st.pop();
+             char b = st.top(); st.pop();
+             if(a==b) ans+=1;
+             else ans +=2;
+         }
+         return ans;
+    }
+};
+
+7
+901. Online Stock Span
+class StockSpanner {
+public:
+stack<pair<int,int>>st;
+    StockSpanner() {
+        
+    }
+    
+    int next(int price) {
+        int span = 1;
+        while(!st.empty() && st.top().first <= price){
+            span += st.top().second;
+            st.pop();
+        }
+        st.push({price,span});
+        return span;
+    }
+};
+
+/**
+ * Your StockSpanner object will be instantiated and called as such:
+ * StockSpanner* obj = new StockSpanner();
+ * int param_1 = obj->next(price);
+ */
+
+
+8 
+1003. Check If Word Is Valid After Substitutions
+class Solution {
+public:
+    bool isValid(string s) {
+      //  method 1 
+    //     if(s.size()==0){
+    //         return true;
+    //     }
+    //     int fnd = s.find("abc");
+    //     if(fnd != string :: npos){
+    //         // found 
+    //         string tleft = s.substr(0,fnd);
+    //         string tright = s.substr(fnd+3 , s.size());
+    //         return isValid(tleft+tright);
+    //     }
+    // return false;
+                    //method 2 
+if(s[0]!= 'a') return false;
+stack < char> st;
+for(auto ch : s){
+    if(ch=='a') st.push(ch);
+    else if(ch=='b') {
+        if(!st.empty()&& st.top()=='a'){
+            st.push('b');
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        // ch == c
+        if(!st.empty() && st.top()=='b'){
+            st.pop();
+            if(!st.empty() && st.top()=='a'){
+                st.pop();
+            }
+            else 
+            return false;
+        }
+        else 
+        return false;
+    }
+}
+return st.empty();
+    }
+};
+
+9 
+394. Decode String
+class Solution {
+public:
+    string decodeString(string s) {
+        stack<string>st;
+        for(auto ch : s){
+            if(ch == ']'){
+            string stringtorepeat = "";
+            while(!st.empty() && st.top() != "[" ){
+                string top = st.top();
+                stringtorepeat += top;
+                st.pop();
+            }
+            st.pop();
+             string numerictimes = "";
+            while(!st.empty() && isdigit(st.top()[0])){
+                numerictimes += st.top();
+                st.pop();
+            }
+           reverse(numerictimes.begin(),numerictimes.end());
+           int n = stoi(numerictimes);
+           // final decoding 
+           string currentdecode = "";
+           while(n--){
+            currentdecode += stringtorepeat;
+           }
+           st.push(currentdecode); 
+            }
+
+            else {
+                string temp (1,ch);
+                st.push(temp);
+            }
+        }
+        string ans ;
+        while(!st.empty() ){
+            ans += st.top();
+            st.pop();
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
+
+10
+71. Simplify Path
+class Solution {
+public:
+     void buildans (stack<string>&s, string &ans){
+        if(s.empty()){
+            return;
+        }
+        string minpath = s.top(); s.pop();
+        buildans(s,ans);
+        ans += minpath;
+     }
+    string simplifyPath(string path) {
+        stack<string>s;
+        int i =0;
+        while(i<path.size()){
+            int start= i;
+            int end = i+1;
+            while(end< path.size() && path[end] != '/'){
+                end++;
+            }
+            string minpath = path.substr(start,end-start);
+            i = end;
+            if(minpath == "/" || minpath == "/."){
+                continue;
+            }
+            if(minpath != "/.."){
+                s.push(minpath);
+            }
+            else if(!s.empty()){
+                s.pop();
+            }
+        }
+        string ans = s.empty() ? "/" : "";
+        buildans(s,ans);
+        return ans;
+    }
+};
+
+
+11
+735. Asteroid Collision
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& asteroids) {
+        stack<int>st;
+        for(auto ast : asteroids){
+            bool destroy = false; // intially noting is distroyed 
+            if(ast>0){
+                st.push(ast);
+            }
+            else{
+                // -ve means when ast is negitive 
+                if(st.empty() || st.top() < 0){
+                    st.push(ast);
+                }
+                else {
+                // collisoon when stack top is positve 
+                    while(!st.empty() && st.top()>0){
+                        if(abs(ast)==st.top()){
+                            destroy = true; 
+                            st.pop();
+                            break;
+                        }
+                        else if(abs(ast)>st.top()){
+                            st.pop();
+                        }
+                        else{
+                            destroy = true;
+                            break;
+                        }
+                    }
+                    if(destroy!=true){
+                        st.push(ast);
+                    }
+                }
+            }
+        }
+            vector<int> result(st.size());
+        for (int i = st.size() - 1; i >= 0; --i) {
+            result[i] = st.top();
+            st.pop();
+        }  
+
+        return result;
+    }
+};
+
+
+12
+853. Car Fleet
+
+class Solution{
+public:
+    int carFleet(int target, vector<int>& position, vector<int>& speed) {
+           int n = position.size();
+        vector<pair<int, double>> cars;
+
+        // Store each car's position and time to reach target
+        for (int i = 0; i < n; i++) {
+            float time = (double)(target - position[i]) / speed[i];
+            cars.push_back({position[i], time});
+        }
+
+        // Sort cars by position in descending order
+        sort(cars.rbegin(), cars.rend()); // rbegin and rend is used for sorting in decending order 
+        stack<float>st;
+        for(int i = 0; i < cars.size(); i++){
+            pair<int,double>&car = cars[i];
+            // geting the time for the car to reach the target 
+            double time = car.second;
+            // if the stack is empty push time 
+            // If current car takes **more time** than the fleet ahead,
+            // it cannot catch up → new fleet (push to stack)
+            while(st.empty() || time > st.top()){
+            st.push(time);
+            }
+        }
+        return st.size();
+    }
+};
+/*
+dry run for test case 
+target = 12
+
+position = [10, 8, 0, 5, 3]
+
+speed = [2, 4, 1, 1, 3]
+
+| Car | Position | Speed | Time to target    |
+| --- | -------- | ----- | ----------------- |
+| 1   | 10       | 2     | (12 - 10)/2 = 1.0 |
+| 2   | 8        | 4     | (12 - 8)/4 = 1.0  |
+| 3   | 0        | 1     | (12 - 0)/1 = 12.0 |
+| 4   | 5        | 1     | (12 - 5)/1 = 7.0  |
+| 5   | 3        | 3     | (12 - 3)/3 = 3.0  |
+
+| Car | Position | Time |
+| --- | -------- | ---- |
+| 1   | 10       | 1.0  |
+| 2   | 8        | 1.0  |
+| 4   | 5        | 7.0  |
+| 5   | 3        | 3.0  |
+| 3   | 0        | 12.0 |
+
+Process:
+Car at 10 (1.0) → stack empty → push → stack = [1.0]
+
+Car at 8 (1.0) → 1.0 <= 1.0 → same fleet → do nothing → stack = [1.0]
+
+Car at 5 (7.0) → 7.0 > 1.0 → new fleet → push → stack = [1.0, 7.0]
+
+Car at 3 (3.0) → 3.0 <= 7.0 → merges into 7.0 fleet → do nothing → stack = [1.0, 7.0]
+
+Car at 0 (12.0) → 12.0 > 7.0 → new fleet → push → stack = [1.0, 7.0, 12.0]
+
+✅ Final Answer:
+Number of car fleets = 3
+
+💬 Fleets:
+
+Fleet 1: Cars at 10 and 8
+
+Fleet 2: Cars at 5 and 3
+
+Fleet 3: Car at 0 (alone)
+
+
+
+13
+1776. Car Fleet II
+class Solution {
+public:
+    vector<double> getCollisionTimes(vector<vector<int>>& cars) {
+        vector<double>answer(cars.size(),-1); // collision time of ith car with the next car
+        stack<int>st;
+        for(int i =cars.size()-1; i>=0; i--){
+            // check if car ahead of current car is faster?
+            while(!st.empty() && cars[st.top()][1] >= cars[i][1]){
+             st.pop();
+            }
+            while(!st.empty()){
+                double coltime = (double)(cars[st.top()][0]- cars[i][0])/ (cars[i][1]-cars[st.top()][1]);
+                if(answer[st.top()]==-1 || coltime <= answer[st.top()] ){
+                 answer[i]= coltime;
+                 break;
+                }
+                st.pop();
+            }
+            st.push(i);
+        }
+        return answer;
+    }
+};
+
