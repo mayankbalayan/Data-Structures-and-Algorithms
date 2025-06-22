@@ -1,0 +1,656 @@
+PRACTISE SET 
+1 QUESTION ONE (REVERSE LINKED LIST)
+Leetcode link :- https://leetcode.com/problems/reverse-linked-list/submissions/1655698398/
+solution :- (leetcode solution)
+
+class Solution {
+public:
+// reverse using recurion 
+      ListNode* reverseusingrecursion(ListNode* prev, ListNode*curr){
+        if(curr == NULL){
+            return prev;
+        }
+        // ek case hmne solve kr liya h 
+       ListNode*NextNode = curr -> next;
+       curr -> next = prev;
+       prev = curr;
+       curr = NextNode;
+       // baaki recusion smbhlega 
+       return = reverseusingrecursion( prev,curr);
+      }
+    ListNode* reverseList(ListNode* head) {
+    ListNode*prev = NULL;
+    ListNode* curr = head;
+    return reverseusingrecursion( prev,curr);
+
+
+    // iterative way 
+    // while(curr!=NULL){
+    //     ListNode*NextNode = curr -> next;
+    //     curr -> next = prev;
+    //     prev = curr;
+    //     curr = NextNode;
+    // }
+    //  return prev;
+
+    }
+};
+
+2. 876. Middle of the Linked List
+https://leetcode.com/problems/middle-of-the-linked-list/description/
+
+class Solution {
+public:
+    int findlength(ListNode *head){
+        int len =0;
+        ListNode* temp = head;
+        while(temp != NULL){
+            len++;
+            temp = temp -> next;
+        }
+        return len;
+    }
+    ListNode* middleNode(ListNode* head) {
+        int n = findlength(head);
+        int position = n/2+1;
+        int currPos=1;
+        ListNode*temp=head;
+        while(currPos!=position){
+            currPos++;
+            temp = temp->next;
+        }
+        return temp;
+    }
+};
+by slow fast algo tortoise algo
+ ListNode* middleNode(ListNode* head) {
+        ListNode*slow=head;
+        ListNode*fast=head;
+        while(fast && fast->next != NULL){
+         slow= slow->next;
+         fast = fast-> next->next;
+        }
+        return slow;
+    }
+};
+
+3
+234. Palindrome Linked List
+https://leetcode.com/problems/palindrome-linked-list/description/
+class Solution {
+public:
+  ListNode* reverseusingrecursion(ListNode* prev, ListNode*curr){
+        if(curr == NULL){
+            return prev;
+        }
+        // ek case hmne solve kr liya h 
+       ListNode*NextNode = curr -> next;
+       curr -> next = prev;
+       prev = curr;
+       curr = NextNode;
+       // baaki recusion smbhlega 
+       ListNode*recusionkaans = reverseusingrecursion( prev,curr);
+       return recusionkaans;
+
+      }
+ListNode* middleNode(ListNode* head) {
+        ListNode*slow=head;
+        ListNode*fast=head;
+        while(fast->next != NULL){
+            fast = fast-> next;
+            if(fast->next != NULL){
+                fast= fast->next;
+         slow= slow->next;
+            }
+        }
+        return slow;
+}
+    bool comparelist(ListNode*head,ListNode*head2){
+        while(head!=NULL&& head2 != NULL){
+            if(head->val!=head2->val){
+                return false;
+            }
+            else{
+                head=head->next;
+                head2=head2->next;
+            }
+        }
+        return true;
+    }
+    bool isPalindrome(ListNode* head) {
+        // break into 2 parts
+        ListNode*midNode=middleNode(head);
+        ListNode*head2 = midNode->next;
+        midNode -> next = NULL;
+        // reverse second linklist 
+        ListNode*prev = NULL;
+        ListNode*curr = head2;
+        head2=reverseusingrecursion(prev,curr);
+    // compare both linked list
+    bool ans = comparelist(head,head2);
+    return ans;
+    
+    }
+};
+4
+141. Linked List Cycle
+https://leetcode.com/problems/linked-list-cycle/description/
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+         ListNode *slow = head, *fast = head;
+    while (fast && fast->next!=NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            return true;
+    }
+    return false;
+    }
+};
+
+5
+142. Linked List Cycle II
+https://leetcode.com/problems/linked-list-cycle-ii/description/
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+    while (fast!=NULL && fast->next!=NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+        // point where slow and fast meet break
+        if (slow == fast)
+            break;
+    }
+    // no cycle case 
+   if (fast==NULL || fast->next==NULL)
+    return NULL;
+    // fast is kept where it meet the slow and slow comes at head 
+    slow = head;
+    while(fast!=slow){
+       slow=slow -> next;
+        fast= fast-> next;
+    }
+    return slow;
+    }
+};
+6 
+ADD 1 TO A LINKED LIST 
+Node * reverse(Node*&head){
+      Node*prev = NULL;
+      Node*curr = head;
+      while(curr!=NULL){
+       Node*nextnode = curr->next;
+       curr -> next = prev;
+       prev = curr;
+       curr= nextnode;
+      }
+    return prev;
+}
+void addone(Node*&head){
+    // reverse
+    head = reverse(head);
+    cout << head->data<< endl;
+    // add 1 
+    int carry =1;
+    Node*temp=head;
+    while(temp->next!=NULL){
+        int totalsum = temp -> data + carry;
+        int digit = totalsum % 10;
+        carry = totalsum/10;
+        temp -> data = digit;
+        temp = temp -> next;
+        if(carry==0){
+            break;
+        }
+    }
+    // process last node
+    if(carry!=0){
+        int totalsum = temp -> data + carry;
+        int digit = totalsum % 10;
+        carry = totalsum/10;
+        temp -> data = digit;
+        if(carry!=0){
+            Node*newNode = new Node(carry);
+            temp -> next = newNode;
+        }
+    }
+    // reverse
+    head = reverse(head);
+}
+7
+25. Reverse Nodes in k-Group
+https://leetcode.com/problems/reverse-nodes-in-k-group/description/
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        // base case
+        // Check if there are at least k nodes to reverse
+         ListNode* temp = head;
+        for (int i = 0; i < k; i++) {
+            if (temp==NULL) return head; // Not enough nodes, return original head
+            temp = temp->next;
+        }
+        // case 1 reverse first k nodes
+        ListNode*prev=NULL;
+        ListNode*curr=head;
+        int pos = 0;
+        ListNode*nextNode =NULL; 
+        while(pos<k){
+        nextNode =curr->next;    
+        curr -> next = prev;
+        prev=curr;
+        curr=nextNode;
+        pos++;
+        }
+        // recursively reverse next grp and connect
+       if(nextNode!=NULL){
+        head->next=reverseKGroup(nextNode,k);
+       }
+       return prev; //new head after reversing k nodes
+    }
+};
+8
+83. Remove Duplicates from Sorted List
+https://leetcode.com/problems/remove-duplicates-from-sorted-list/description/
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head==NULL||head->next==NULL){
+            return head;
+        }
+        ListNode*temp=head;
+        while(temp!=NULL && temp->next!=NULL){
+            if( temp->val==temp->next->val){
+                //remove
+        ListNode* nextnode=temp->next;
+        temp->next=nextnode->next;
+        nextnode->next=NULL;
+        delete nextnode;
+            }
+            else{
+                temp=temp->next;
+            }
+        }
+        return head;
+    }
+};
+9
+21. Merge Two Sorted Lists
+https://leetcode.com/problems/merge-two-sorted-lists/description/
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        if(list1==NULL)return list2;
+        if(list2==NULL)return list1;
+        ListNode* ans = new ListNode(-1);
+        ListNode*merge=ans;
+        while(list1!=NULL&&list2!=NULL){
+            if(list1->val<=list2->val){
+                merge->next=list1;
+                merge=list1;
+                list1=list1->next;
+            }
+            else{
+                merge->next=list2;
+                merge = list2;
+                list2=list2->next;
+            }
+        }
+        if(list1!=NULL){
+            merge->next=list1;
+        }
+         if(list2!=NULL){
+            merge->next=list2;
+        }
+        return ans->next;
+    }
+};
+10
+Delete N nodes after M nodes of a linked list
+https://www.geeksforgeeks.org/problems/delete-n-nodes-after-m-nodes-of-a-linked-list/1
+class Solution {
+  public:
+    Node* linkdelete(Node* head, int n, int m) {
+        // code here
+        if(head==NULL){
+            return NULL;
+        }
+        Node*temp=head;
+       while(temp!=NULL){
+            for(int i=1;i<m&&temp!=NULL;i++){
+                temp=temp->next;
+            }
+        
+            if(temp==NULL)return head;
+            Node*temp2=temp->next;
+            for(int j=0;j<n&&temp2!=NULL;j++){
+                Node*toDel=temp2;
+                temp2=temp2->next;
+                delete(toDel);
+            }
+            temp->next=temp2;
+             temp = temp2;
+       }
+            return head;
+        }
+};
+11.
+leetcode 160
+160. Intersection of Two Linked Lists
+https://leetcode.com/problems/intersection-of-two-linked-lists/description/
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode * a = headA;
+        ListNode* b = headB;
+        while(a->next!=NULL&& b->next!=NULL){
+            if(a==b)return a;
+            a= a->next;
+            b=b->next;
+        }
+        if(a->next==NULL){
+            // b list is bigger ya equal h
+            // now we need to find how much it is bigger 
+            int blen=0;
+            while(b->next!=NULL){
+                blen++;
+                b=b->next;
+            }
+            while(blen--){
+                headB = headB->next;
+            }
+        }
+        else{
+            // a list is bigger
+            // now we need to find how much it is bigger 
+            int alen=0;
+            while(a->next!=NULL){
+                alen++;
+                a=a->next;
+            }
+            while(alen--){
+                headA = headA->next;
+            }
+        }
+        while(headA!=headB){
+            headA=headA->next;
+            headB=headB->next;
+        }
+        return headA;
+    }
+};
+12
+148. Sort List
+https://leetcode.com/problems/sort-list/description/
+class Solution {
+public:
+    ListNode* findMid(ListNode* head){
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+        while(fast!=NULL && fast->next!=NULL){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+    ListNode* merge(ListNode* list1, ListNode* list2) {
+        if(list1==NULL)return list2;
+        if(list2==NULL)return list1;
+        ListNode* ans = new ListNode(-1);
+        ListNode*merge=ans;
+        while(list1!=NULL&&list2!=NULL){
+            if(list1->val<=list2->val){
+                merge->next=list1;
+                merge=list1;
+                list1=list1->next;
+            }
+            else{
+                merge->next=list2;
+                merge = list2;
+                list2=list2->next;
+            }
+        }
+        if(list1!=NULL){
+            merge->next=list1;
+        }
+         if(list2!=NULL){
+            merge->next=list2;
+        }
+        return ans->next;
+    }
+    ListNode* sortList(ListNode* head) {
+    //base case
+    if(head==NULL || head->next == NULL){
+        return head;
+    }   
+    ListNode* mid = findMid(head);
+    ListNode* left = head;
+    ListNode* right = mid->next;
+    mid->next = NULL;
+
+    //recursive calls to sort both halves
+    left = sortList(left);
+    right = sortList(right); 
+
+    //merge both left and right
+    ListNode*result = merge(left,right);
+    return result;
+    }
+};
+13
+Flattening a Linked List
+https://www.geeksforgeeks.org/problems/flattening-a-linked-list/1
+class Solution {
+  public:
+    // Function which returns the  root of the flattened linked list.
+    Node*merge(Node*a,Node*b){
+        if(a==NULL)return b;
+        if(b==NULL)return a;
+        Node*ans=NULL;
+        if(a->data<b->data){
+            ans = a;
+            a->bottom=merge(a->bottom,b);
+        }
+        else{
+            ans=b;
+            b->bottom = merge(a,b->bottom);
+        }
+        return ans;
+    }
+    Node *flatten(Node *root) {
+     if(root==NULL)return 0;
+     Node*mergedLL=merge(root,flatten(root->next));
+     return mergedLL;
+    }
+};
+14
+61. Rotate List
+https://leetcode.com/problems/rotate-list/description/
+class Solution {
+public:
+ int getlen(ListNode*head){
+    int len=0;
+    while(head!=NULL){
+        len++;
+        head=head->next;
+    }
+    return len;
+ }
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head==NULL) return 0;
+        int len=getlen(head);
+        int actualrotatek = (k%len);
+        if(actualrotatek==0){
+            return head;
+        }
+        int newlastnodepos = len - actualrotatek - 1;
+        ListNode*newhead = NULL;
+        ListNode*newlastnode = head;
+        for(int i =0; i<newlastnodepos;i++){
+            newlastnode = newlastnode -> next;
+        }
+       ListNode* newHead = newlastnode->next;
+       newlastnode->next=NULL;
+       ListNode*it=newHead;
+       while(it->next!=NULL){
+        it=it->next;
+       }
+       it->next=head;
+       return newHead;
+    }
+};
+15
+2181. Merge Nodes in Between Zeros
+https://leetcode.com/problems/merge-nodes-in-between-zeros/description/
+class Solution {
+public:
+    ListNode* mergeNodes(ListNode* head) {
+        if(head==NULL) return 0;
+        ListNode*slow=head;
+        ListNode*fast=head->next;
+        ListNode*newlastnode = NULL;
+        int sum = 0;
+        while(fast!=NULL){
+          if(fast->val!=0){
+             sum += fast->val;
+          }
+          else{
+            // fast->val = 0 so, slow = sum;
+            slow->val=sum;
+            newlastnode=slow;
+            slow = slow->next;
+            sum =0;
+          }
+          fast = fast ->next;
+        }
+        ListNode*temp=newlastnode->next;
+        // just formed new list 
+        newlastnode->next = NULL;
+         // Deleting old list
+         while (temp!=NULL){
+            ListNode*nxt = temp->next;
+            delete temp;
+            temp = nxt;
+         }
+         return head;
+    }
+};
+16
+328 odd even linked list
+https://leetcode.com/problems/odd-even-linked-list/description/
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(head==NULL|| head->next == NULL) return head;
+        ListNode*h1 = head; // odd node index
+        ListNode*h2=head->next; // even node index
+        ListNode*evenhead = h2;
+        while(h2!=NULL&&h2->next!= NULL){
+            h1->next=h2->next;
+            h2->next=h2->next->next;
+            h1=h1->next;
+            h2=h2->next;
+        }
+        // THE TWO independent prepared list has been regrouped
+        // odd index vali list -> even index list
+        h1->next=evenhead;
+        return head;
+    }
+};
+17
+2816. Double a Number Represented as a Linked List
+https://leetcode.com/problems/double-a-number-represented-as-a-linked-list/description/
+class Solution {
+public:
+    void solve(ListNode*head,int&carry){
+     if(head==NULL)return;
+     solve(head->next,carry);
+     // 1 case solve
+     int prod = head->val * 2 + carry;
+     head->val = prod%10;
+     carry = prod/10;
+    }
+    ListNode* doubleIt(ListNode* head) {
+        int carry=0;
+        solve(head,carry);
+        if(carry!=0){
+            ListNode*carrynode = new ListNode(carry);
+            carrynode -> next = head;
+            head = carrynode;
+        }
+        return head;
+    }
+};
+18
+1721. Swapping Nodes in a Linked List
+https://leetcode.com/problems/swapping-nodes-in-a-linked-list/description/
+class Solution {
+public:
+int getlen(ListNode*head){
+    int len=0;
+    while(head!=NULL){
+        len++;
+        head=head->next;
+    }
+    return len;
+ }
+    ListNode* swapNodes(ListNode* head, int k) {
+        int len = getlen(head);
+        ListNode*it1=head;
+        ListNode*it2=head;
+        for(int i=0; i<k-1; i++){
+           it1 = it1->next;
+        }
+        for(int i=0; i<len-k; i++){
+            it2=it2->next;
+        }
+        swap(it1->val,it2->val);
+        return head;
+    }
+};
+19
+1171. Remove Zero Sum Consecutive Nodes from Linked List
+https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/
+class Solution {
+public:
+void sanatizeMap(ListNode*head,unordered_map<int,ListNode*>&mp,int csum){
+    int temp = csum;
+    while(true){
+        temp += head->val;
+        if(temp == csum){
+            break;
+        }
+        mp.erase(temp);
+        head= head->next;
+    }
+}
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        if(head==NULL || (head->next==NULL&& head->val==0)) return 0;
+        unordered_map<int,ListNode*>mp;
+        auto it = head;
+        int csum = 0;
+        while(it!=NULL){
+            csum += it->val;
+            if(csum==0){
+                head = it->next;
+                mp.clear();
+            }
+            else if(mp.find(csum)!=mp.end()){
+                sanatizeMap(mp[csum]->next,mp,csum);
+                mp[csum]->next = it-> next;
+            }
+        
+        else{
+            mp[csum] = it;
+        }
+                    it = it -> next;
+
+    }
+        return head;
+    }
+};
+20
+leetcode 10
