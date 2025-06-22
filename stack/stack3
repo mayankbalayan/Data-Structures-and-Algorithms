@@ -1,0 +1,106 @@
+// class 3 of stacks questions
+#include<iostream>
+#include<stack>
+#include<vector>
+using namespace std;
+// prev smallest element 
+vector<int> prevsmallerelement(int *arr, int size, vector<int>&ans){
+    stack<int>st;
+    st.push(-1);
+    for(int i =0; i<size; i++){
+     int curr = arr[i];
+     // answer find kro curr element k liye 
+     while(st.top()>=curr){
+        st.pop(); 
+     }
+     ans[i] = st.top();
+     st.push(curr);
+    }
+    return ans;
+}
+
+// next smaller element
+vector<int> nextsmallerelement(int *arr, int size, vector<int>&ans){
+    stack<int>st;
+    st.push(-1);
+    for(int i =size-1; i>=0; i--){
+     int curr = arr[i];
+     // answer find kro curr element k liye 
+     while(st.top()>=curr){
+        st.pop(); 
+     }
+     ans[i] = st.top();
+     st.push(curr);
+    }
+    return ans;
+}
+
+
+// implement a min stack 
+// all operations such as pop push get min top should be done in o(1) complexity
+// leetcode 155
+
+// class MinStack {
+// public:
+//  vector<pair<int,int>>st;
+//     MinStack() {
+        
+//     }
+    
+//     void push(int val) {
+//         if(st.empty()){
+//             // it means i am inserting  the first element 
+//             pair<int,int> p;
+//             p.first = val;
+//             p.second = val;
+//             st.push_back(p);
+//         }
+//         else{
+//             pair<int,int> p;
+//             p.first = val ;
+//             int puranamin = st.back().second;
+//             p.second = min(puranamin,val); 
+//             st.push_back(p);
+//         }
+//     }
+    
+//     void pop() {
+//         st.pop_back();
+//     }
+    
+//     int top() {
+//         // pair<int,int> rightmostpair = st.back();
+//         // return rightmostpair.first;
+//         //or
+//         return st.back().first;
+//     }
+    
+//     int getMin() {
+//         // pair<int,int> rightmostpair = st.back();
+//         // return rightmostpair.second;
+//       //  or 
+//         return st.back().second;
+//     }
+// };
+
+int main(){
+int arr[]= {8,4,6,2,3};
+int size = 5;
+vector<int>next(size);
+cout << "next smallest number "  << " ";
+next = nextsmallerelement(arr,size,next);
+for(auto i : next){
+    cout << i<< " ";
+}
+cout << endl;
+
+vector<int>prev(size);
+ cout << "prev smallest element " << " ";
+prev = prevsmallerelement(arr,size,prev);
+for(auto i : prev){
+    cout << i<< " ";
+}
+cout << endl;
+return 0 ;
+}
+// class 3 
